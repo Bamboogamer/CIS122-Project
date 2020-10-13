@@ -11,4 +11,5 @@ DANNY / JIWON
   - GUI for entire app for options
 
 CAELAN
-- LED/RGB Strip responsive to music
+- LED/RGB Strip responsive to music/sounds
+
