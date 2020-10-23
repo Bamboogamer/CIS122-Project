@@ -1,4 +1,4 @@
-Program does: SIMON SAYS GAME, like bop-its
+Program does: SIMON SAYS GAME, like bop-it game
 
 
 MATTHEW / DANNY -- FRONT-END PLAYER GUI
