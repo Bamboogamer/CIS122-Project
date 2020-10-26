@@ -1,4 +1,5 @@
 package SimonSays_v1;
+// Danny Le
 
 // Creates the basic UI of the simon says game with a score and the 4 colors that can be pressed like buttons to play the game
 // Currently the score only goes up when the RED button is pressed
