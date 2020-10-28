@@ -1,0 +1,30 @@
+import sqlite3
+
+"""
+Using SQLite directly in Python to store top five user - score data.
+ """
+
+# defining connector & cursor
+# path in my laptop; needs to be changed
+db = sqlite3.connect("c:\\Users\\Jiwon Kim\\Desktop\\Python Files\\simonSays.db")
+csr = db.cursor()
+
+def createTable():
+    # a method to create a table scores to keep track of top 5 high scores
+    db.execute("CREATE TABLE IF NOT EXISTS scores(name TEXT, score INTEGER)")
+
+def updateScores(newName, newScore):
+    # a method to update a new high score in scores table
+    db.execute("INSERT INTO scores {0} VALUES {1}".format(newName, newScore))
+
+def showTopFive():
+    # a method to show top five scores in descending order
+    db.execute("SELECT name, score FROM scores ORDER BY score DESC")
+
+def delLowestScore(lowName, lowScore):
+    # a method to delete the row with the lowest score from scores table
+    db.execute("DELETE FROM scores WHERE name = ?", (lowName))
+
+
+
+
