@@ -25,6 +25,11 @@ class SimonSays {
         private ArrayList<Character> pattern = new ArrayList<>();
         private Boolean game_over = false;
         private int score = 0;
+        private StringBuilder player_name = new StringBuilder();
+
+        public StringBuilder get_player_name(){
+            return player_name;
+        }
 
         public Boolean game_status(){
             return game_over;

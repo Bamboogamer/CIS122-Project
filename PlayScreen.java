@@ -12,12 +12,19 @@ import java.util.ArrayList;
 
 public class PlayScreen implements ActionListener{
 
+    // if High Score was found
+    private static boolean high_score_found = true;
+
+    private JFrame new_high_score;
+    private JLabel initials;
+
+    // Game instance and player input pattern
     private static SimonSays.Game game;
     private static ArrayList<Character> player_pattern;
 
+    // Main play frame
     private final JFrame play_frame;
     private final JLabel score_label;
-
     // Game Over UI Objects
     private final JFrame gameover_screen;
     private final JLabel game_over_label;
@@ -50,6 +57,38 @@ public class PlayScreen implements ActionListener{
         btn_yellow = new JButton();
         btn_green = new JButton();
         PLAY_SCREEN();
+    }
+
+    public void NEW_HIGH_SCORE(){
+        new_high_score = new JFrame("CONGRATULATIONS YOU GOT NEW HIGH SCORE!");
+        initials = new JLabel("NAME: YOUR INITIALS HERE");
+
+        new_high_score.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel high_score_panel = new JPanel();
+        high_score_panel.setLayout(new BoxLayout(high_score_panel, BoxLayout.Y_AXIS));
+
+        JPanel keyboard_panel = new JPanel();
+        keyboard_panel.setLayout(new GridLayout(2, 13));
+
+        initials.setFont(new Font(initials.getName(), Font.BOLD, 35));
+        new_high_score.add(initials, BorderLayout.PAGE_START);
+
+
+        char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+
+        for (char c : alphabet) {
+            JButton btn_letter = new JButton(String.valueOf(c));
+            btn_letter.setActionCommand(String.valueOf(c));
+            btn_letter.addActionListener(this);
+            btn_letter.setPreferredSize(new Dimension(50, 50));
+            btn_letter.setMaximumSize(new Dimension(75, 75));
+            keyboard_panel.add(btn_letter);
+        }
+
+        new_high_score.setSize(1000,500);
+        new_high_score.add(keyboard_panel);
+        new_high_score.setVisible(true);
     }
 
     public Boolean match(ArrayList<Character> player_pattern, ArrayList<Character> main_pattern){
@@ -140,10 +179,9 @@ public class PlayScreen implements ActionListener{
         // Adds the main screen panel to the play screen (play_frame)
         play_frame.add(play_panel);
 
-        // Default sizing of the play_frame 400 x 600 pixels
+        // Default sizing of the play_frame 1000 x 400 pixels
         play_frame.setSize(1000,400);
         play_frame.setVisible(true);
-
 
     }
 
@@ -169,6 +207,10 @@ public class PlayScreen implements ActionListener{
         gameover_screen.add(game_over_panel);
         gameover_screen.setVisible(true);
 
+        if(high_score_found){
+            NEW_HIGH_SCORE();
+        }
+
     }
 
     public static void main(String[] args) {
@@ -190,30 +232,319 @@ public class PlayScreen implements ActionListener{
 
             // "RED" Option was clicked
             case "RED":
-                System.out.println("RED was pressed");
+//                System.out.println("RED was pressed");
                 player_pattern.add('R');
                 check_input();
                 break;
 
             // "BLUE" Option was clicked
             case "BLUE":
-                System.out.println("BLUE was pressed");
+//                System.out.println("BLUE was pressed");
                 player_pattern.add('B');
                 check_input();
                 break;
 
             // "YELLOW" Option was clicked
             case "YELLOW":
-                System.out.println("YELLOW was pressed");
+//                System.out.println("YELLOW was pressed");
                 player_pattern.add('Y');
                 check_input();
                 break;
 
             // "BLUE" Option was clicked
             case "GREEN":
-                System.out.println("GREEN was pressed");
+//                System.out.println("GREEN was pressed");
                 player_pattern.add('G');
                 check_input();
+                break;
+
+            case "A":
+//                System.out.println("A");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("A");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+                System.out.println(game.get_player_name());
+                break;
+
+            case "B":
+//                System.out.println("B");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("B");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+
+            case "C":
+//                System.out.println("C");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("C");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "D":
+//                System.out.println("D");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("D");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "E":
+//                System.out.println("E");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("E");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "F":
+//                System.out.println("F");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("F");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "G":
+//                System.out.println("G");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("G");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "H":
+//                System.out.println("H");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("H");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "I":
+//                System.out.println("I");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("I");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "J":
+//                System.out.println("J");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("J");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "K":
+//                System.out.println("K");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("K");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "L":
+//                System.out.println("L");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("L");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "M":
+//                System.out.println("M");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("M");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "N":
+//                System.out.println("N");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("N");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "O":
+//                System.out.println("O");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("O");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "P":
+//                System.out.println("P");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("P");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "Q":
+//                System.out.println("Q");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("Q");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "R":
+//                System.out.println("R");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("R");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "S":
+//                System.out.println("S");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("S");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "T":
+//                System.out.println("T");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("T");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "U":
+//                System.out.println("U");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("U");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "V":
+//                System.out.println("V");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("V");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "W":
+//                System.out.println("W");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("W");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "X":
+//                System.out.println("X");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("X");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "Y":
+//                System.out.println("Y");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("Y");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
+                break;
+            case "Z":
+//                System.out.println("Z");
+                if(game.get_player_name().length() != 3){
+                    game.get_player_name().append("Z");
+                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
+                }
+                else{
+                    new_high_score.dispose();
+                }
+//                System.out.println(game.get_player_name());
                 break;
         }
     }
