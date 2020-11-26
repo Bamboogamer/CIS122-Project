@@ -58,8 +58,19 @@ def showTopFive():
 def close():
     db.commit() # a method to commit to the changes made in the database
     db.close()  # a method to close SQL connection
+   
+def checkLowestScore():
+    """
+    a method to check the lowest score in database
+    :return: int - the lowest score
+    """
+    table = "scores"
+    field = "min(score)"
+    sql_query = (f"SELECT {field} "
+                 f"FROM {table} ")
+    csr.execute(sql_query)
+    db.commit()
 
-# Optional method for now
 def deleteLowestScore():
     """
     a method to delete the row with the lowest score from scores table
