@@ -6,6 +6,13 @@ import sqlite3
 from flask import Flask, jsonify
 app = Flask(__name__)  # name of the current module
 
+@app.route('/createTable')
+def cT():
+    with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
+        csr = db.cursor()
+        createTable(csr)
+        db.commit()
+
 def createTable(csr):
     # a method to create a table scores to keep track of top 5 high scores
     csr.execute("CREATE TABLE IF NOT EXISTS scores (name TEXT, score INTEGER)")
@@ -54,7 +61,7 @@ def close():
     db.commit() # a method to commit to the changes made in the database
     db.close()  # a method to close SQL connection
 
-@app.route('/delLowScore')
+@app.route('/delLowestScore')
 def dLS():
     with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
         csr = db.cursor()
