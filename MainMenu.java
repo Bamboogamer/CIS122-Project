@@ -64,8 +64,6 @@ public class MainMenu implements ActionListener {
         buttonsPanel.add(highscoresButton);
         buttonsPanel.add(exitButton);
 
-
-
         // adds the menuPanel to the menuFrame, and sets the size, title, and makes it visible.
         menuFrame.add(menuTitlePanel, BorderLayout.CENTER);
         menuFrame.add(buttonsPanel, BorderLayout.SOUTH);
@@ -74,14 +72,10 @@ public class MainMenu implements ActionListener {
         menuFrame.pack();
         menuFrame.setVisible(true);
 
-
-
         // adds action listeners to the buttons.
         playButton.addActionListener(this);
         highscoresButton.addActionListener(this);
         exitButton.addActionListener(this);
-
-
 
     } // end MainMenu method
 
@@ -102,7 +96,7 @@ public class MainMenu implements ActionListener {
             // if play is pushed, closes the main menu and opens the Play Screen
             case "Play":
                 menuFrame.dispose();
-                new PlayScreen();
+                new DifficultyScreen();
 
                 // if High Scores is pushed, closes the main menu and opens the High Scores screen
             case "High Scores":
@@ -112,7 +106,6 @@ public class MainMenu implements ActionListener {
                 // if Exit is pushed, closes the main menu.
             case "Exit":
                 menuFrame.dispose();
-
 
         } // end switch
     }// end actionPerformed method
