@@ -108,12 +108,6 @@ def findPlayer(csr, name):
         return True
     
 
-
-def changeScore():
-    table = "scores"
-    field = "score"
-    csr.execute("UPDATE score")
-
 db = sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db")
 # Obtaining a cursor object from the connection object(db)
 csr = db.cursor()
