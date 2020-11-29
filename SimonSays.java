@@ -1,14 +1,7 @@
 package SimonSays_v2;
-/*
-Code by Danny Le
 
-TODO:
+// Danny Le / Jiwon Kim
 
-1. Allow for only 1 character at a time? Controller input will allow for only 1 button press for each color
-2. Change PLAYSCREEN UI to blink the getPattern() from Game object
- */
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -46,6 +39,15 @@ class SimonSays {
         public void add_score(){
             score++;
         }
+
+//        public Boolean score_status(){
+//
+//            if(getScore() > ANY HIGHSCORE){
+//                return true;
+//            }
+//            return false;
+//
+//        }
 
         public void add_to_pattern(){
             Random rand = new Random();

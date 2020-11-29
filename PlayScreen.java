@@ -1,9 +1,16 @@
 package SimonSays_v2;
 // Danny Le / Jiwon Kim / Syeda Hafsa Peerzada
 
+// Danny's Methods: match(), check_input(), PlayScreen(), PLAY(), GAMEOVER(), HIGHSCORE()
+// colorChange(), blink(), buttonBlink() contributed by Syeda Hafsa Peerzada
+// highscore_to_db() by Jiwon Kim
+
+
+//okhttp-4.10.0-RC1
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 import java.io.IOException;
 
 import javax.swing.*;
@@ -53,6 +60,7 @@ public class PlayScreen implements ActionListener{
         new PlayScreen();
     }
 
+
     public PlayScreen(){
         // Creates a new instance of the game and creates the PlayScreen UI
         game = new SimonSays.Game();
@@ -72,11 +80,10 @@ public class PlayScreen implements ActionListener{
         btn_blue = new JButton();
         btn_yellow = new JButton();
         btn_green = new JButton();
-        PLAY_SCREEN();
+        PLAY();
         blink();
     }
 
-    // colorChange(), blink(), buttonBlink() contributed by Syeda Hafsa Peerzada
     private void colorChange() {
 
         Timer blinkTimer = new Timer(TIMER_DELAY, new ActionListener() {
@@ -132,6 +139,7 @@ public class PlayScreen implements ActionListener{
     }
 
     public void buttonblink(JButton button,int delay){
+
         //the blinking pattern is indicated by the the buttons turning dark.
         JButton tem = new JButton();
         tem.setBackground(button.getBackground().darker().darker().darker());
@@ -167,7 +175,7 @@ public class PlayScreen implements ActionListener{
         // Resets the player_pattern to "empty" once a new color is added to the game's main pattern
         if(!match(player_pattern, game.getPattern())){
             game.end_game();
-            GAMEOVER_SCREEN();
+            GAMEOVER();
 
 
         }
@@ -181,7 +189,7 @@ public class PlayScreen implements ActionListener{
         }
     }
 
-    public void PLAY_SCREEN(){
+    public void PLAY(){
 
         // Starts the game with 1 random color
         game.add_to_pattern();
@@ -242,7 +250,7 @@ public class PlayScreen implements ActionListener{
 
     }
 
-    public void GAMEOVER_SCREEN(){
+    public void GAMEOVER(){
         // Disables all the game's buttons so you can't keep playing
         btn_red.setEnabled(false);
         btn_blue.setEnabled(false);
@@ -266,13 +274,13 @@ public class PlayScreen implements ActionListener{
 
         // This condition can be changed, only true when a new high score is found
         if(high_score_found){
-            NEW_HIGH_SCORE();
+            HIGHSCORE();
             highscore_to_db();
         }
 
     }
 
-    public void NEW_HIGH_SCORE(){
+    public void HIGHSCORE(){
 
         // NEW_HIGH_SCORE screen is created to ask for user input for their initials
 
@@ -651,7 +659,5 @@ public class PlayScreen implements ActionListener{
                 }
                 break;
         }
-
     }
-
 }
