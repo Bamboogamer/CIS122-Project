@@ -1,7 +1,5 @@
-// Danny Le
-
-// Creates the basic UI of the simon says game with a score and the 4 colors that can be pressed like buttons to play the game
-// Currently the score only goes up when the RED button is pressed
+package SimonSays_v2;
+// Danny Le / Jiwon Kim / Syeda Hafsa Peerzada
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,14 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-
-public class PlayScreen implements ActionListener {
-
-    // if High Score was found
-    private static boolean high_score_found = true;
-
-    private JFrame new_high_score;
-    private JLabel initials;
+public class PlayScreen implements ActionListener{
 
     // Game instance and player input pattern
     private static SimonSays.Game game;
@@ -30,6 +21,7 @@ public class PlayScreen implements ActionListener {
     // Main play frame
     private final JFrame play_frame;
     private final JLabel score_label;
+
     // Game Over UI Objects
     private final JFrame gameover_screen;
     private final JLabel game_over_label;
@@ -42,10 +34,24 @@ public class PlayScreen implements ActionListener {
     private final JButton btn_yellow;
     private final JButton btn_green;
 
-    private OkHttpClient client;
-    private Response response;
-    private Request request;
+    // NEW SCORE FOUND screen
+    private JFrame new_high_score;
+    private JLabel initials;
 
+    // Difficulty Screen variables
+    public static int TIMER_DELAY = 1000;
+
+    // High Score Database stuff
+//    private OkHttpClient client;
+//    private Response response;
+//    private Request request;
+
+    // if High Score was found, TEMPORARY
+    private static boolean high_score_found = true;
+
+    public static void main(String[] args) {
+        new PlayScreen();
+    }
 
     public PlayScreen(){
         // Creates a new instance of the game and creates the PlayScreen UI
@@ -67,72 +73,78 @@ public class PlayScreen implements ActionListener {
         btn_yellow = new JButton();
         btn_green = new JButton();
         PLAY_SCREEN();
-
-        client = new OkHttpClient().newBuilder().build();
-        response = null;
-        request = null;
+        blink();
     }
 
-    public void NEW_HIGH_SCORE(){
-        new_high_score = new JFrame("CONGRATULATIONS YOU GOT NEW HIGH SCORE!");
-        initials = new JLabel("NAME: YOUR INITIALS HERE");
+    // colorChange(), blink(), buttonBlink() contributed by Syeda Hafsa Peerzada
+    private void colorChange() {
 
-        new_high_score.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Timer blinkTimer = new Timer(TIMER_DELAY, new ActionListener() {
 
-        JPanel high_score_panel = new JPanel();
-        high_score_panel.setLayout(new BoxLayout(high_score_panel, BoxLayout.Y_AXIS));
+            public void actionPerformed(ActionEvent e) {
+                //to prevent the buttons from staying dark after they indicate the blinking pattern,
+                //colorChange() sets the colors of the buttons to their original color
 
-        JPanel keyboard_panel = new JPanel();
-        keyboard_panel.setLayout(new GridLayout(2, 13));
+                btn_red.setBackground(Color.RED);
 
-        initials.setFont(new Font(initials.getName(), Font.BOLD, 35));
-        new_high_score.add(initials, BorderLayout.PAGE_START);
+                btn_blue.setBackground(Color.BLUE);
 
+                btn_yellow.setBackground(Color.YELLOW);
 
-        char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+                btn_green.setBackground(Color.GREEN);
 
-        for (char c : alphabet) {
-            JButton btn_letter = new JButton(String.valueOf(c));
-            btn_letter.setActionCommand(String.valueOf(c));
-            btn_letter.addActionListener(this);
-            btn_letter.setPreferredSize(new Dimension(50, 50));
-            btn_letter.setMaximumSize(new Dimension(75, 75));
-            keyboard_panel.add(btn_letter);
-        }
-
-        new_high_score.setSize(1000,500);
-        new_high_score.add(keyboard_panel);
-        new_high_score.setVisible(true);
+                ((Timer) e.getSource()).stop();
+            }
+        });
+        blinkTimer.start();//initiate the timer
     }
 
+    public void blink() {
+        int i=1;
 
-    public void highscore_to_db() {
-        String player_name = game.get_player_name().toString();
-        int player_score = game.getScore();
-        String url = "http://127.0.0.1:5000/user/" + player_name + "/score/" + player_score;
+        //takes a character from the Simon pattern and checks it to blink each appropriate button with the time delay
+        for (Character character : game.getPattern()) {
+            i++;
 
-        // TODO Jiwon code here
-        request = new Request.Builder()
-                .url(url)
-                .method("GET", null)
-                .build();
+            try {//puts the system to sleep for 100 milliseconds after each blink
+                Thread.sleep(100);
 
-        try{
-            response = client.newCall(request).execute();
+            } catch (Exception e) {
+            }
+
+            if (character.equals('R')) {
+
+                buttonblink(btn_red, i*TIMER_DELAY);
+
+            } else if (character.equals('B')) {
+
+                buttonblink(btn_blue, i*TIMER_DELAY);
+
+            } else if (character.equals('Y')) {
+
+                buttonblink(btn_yellow, i*TIMER_DELAY);
+
+            } else if (character.equals('G')) {
+
+                buttonblink(btn_green, i*TIMER_DELAY);
+            }
         }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-//        try {
-//            response = client.newCall(request).execute();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        String s = Objects.requireNonNull(response.body().string());
-//        JSONArray jsonArray = new JSONArray(s);
-//        JSONObject lowScore = jsonArray.getJSONObject(0);
+    }
 
+    public void buttonblink(JButton button,int delay){
+        //the blinking pattern is indicated by the the buttons turning dark.
+        JButton tem = new JButton();
+        tem.setBackground(button.getBackground().darker().darker().darker());
+
+        Timer timer = new Timer(delay, new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                button.setBackground(tem.getBackground());
+                colorChange();
+
+            }
+        });
+        timer.setRepeats(false);// so that the pattern only blinks once
+        timer.start();//initiates the timer
     }
 
     public Boolean match(ArrayList<Character> player_pattern, ArrayList<Character> main_pattern){
@@ -149,21 +161,23 @@ public class PlayScreen implements ActionListener {
         return matches;
     }
 
-    public Boolean end_of_pattern(ArrayList<Character> player_pattern, ArrayList<Character> main_pattern){
-        return (player_pattern.size() == main_pattern.size());
-    }
-
     public void check_input(){
+        // Checks the user's color input. If any input does not match the pattern the game is over.
+        // Only adds to the score once the completed player_pattern matches the actual game pattern (game.getPattern())
+        // Resets the player_pattern to "empty" once a new color is added to the game's main pattern
         if(!match(player_pattern, game.getPattern())){
             game.end_game();
             GAMEOVER_SCREEN();
+
+
         }
-        else if (match(player_pattern, game.getPattern()) && end_of_pattern(player_pattern, game.getPattern())){
+        else if ((match(player_pattern, game.getPattern())) && (player_pattern.size() == game.getPattern().size())){
             game.add_score();
             player_pattern.clear();
             game.add_to_pattern();
+            blink();
             score_label.setText("Score: " + game.getScore());
-            System.out.println("NEW PATTERN: "+ game.getPattern());  // TODO KEEP FOR TESTING
+//            System.out.println("NEW PATTERN: "+ game.getPattern());  // TODO KEEP FOR TESTING
         }
     }
 
@@ -171,7 +185,7 @@ public class PlayScreen implements ActionListener {
 
         // Starts the game with 1 random color
         game.add_to_pattern();
-        System.out.println("START PATTERN: "+ game.getPattern());
+//        System.out.println("START PATTERN: "+ game.getPattern());
 
         // By default, closes the frame when the window is closed, setting up the whole screen here
         play_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -200,7 +214,6 @@ public class PlayScreen implements ActionListener {
         btn_green.addActionListener(this);
 
         // For better visuals, I set the colors to the basic RED, BLUE, YELLOW, and GREEN colors
-        // Can be changed to be less... aggressive to the eyes
         btn_red.setBackground(Color.RED);
         btn_blue.setBackground(Color.BLUE);
         btn_yellow.setBackground(Color.YELLOW);
@@ -251,17 +264,66 @@ public class PlayScreen implements ActionListener {
         gameover_screen.add(game_over_panel);
         gameover_screen.setVisible(true);
 
+        // This condition can be changed, only true when a new high score is found
         if(high_score_found){
             NEW_HIGH_SCORE();
+            highscore_to_db();
         }
 
     }
 
-    public static void main(String[] args) {
-        new PlayScreen();
+    public void NEW_HIGH_SCORE(){
+
+        // NEW_HIGH_SCORE screen is created to ask for user input for their initials
+
+        new_high_score = new JFrame("CONGRATULATIONS YOU GOT NEW HIGH SCORE!");
+        initials = new JLabel("NAME: YOUR INITIALS HERE");
+        new_high_score.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel high_score_panel = new JPanel();
+        high_score_panel.setLayout(new BoxLayout(high_score_panel, BoxLayout.Y_AXIS));
+
+        JPanel keyboard_panel = new JPanel();
+        keyboard_panel.setLayout(new GridLayout(2, 13));
+
+        initials.setFont(new Font(initials.getName(), Font.BOLD, 35));
+        new_high_score.add(initials, BorderLayout.PAGE_START);
+
+        // Adds entirety of Alphabet as buttons in a 2x13 layout
+        char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+
+        for (char c : alphabet) {
+            JButton btn_letter = new JButton(String.valueOf(c));
+            btn_letter.setActionCommand(String.valueOf(c));
+            btn_letter.addActionListener(this);
+            btn_letter.setPreferredSize(new Dimension(50, 50));
+            btn_letter.setMaximumSize(new Dimension(75, 75));
+            keyboard_panel.add(btn_letter);
+        }
+
+        new_high_score.setSize(1000,500);
+        new_high_score.add(keyboard_panel);
+        new_high_score.setVisible(true);
     }
 
-    @Override
+    public void highscore_to_db() {
+        String player_name = game.get_player_name().toString();
+        int player_score = game.getScore();
+        String url = "http://127.0.0.1:5000/user/" + player_name + "/score/" + player_score;
+
+        // Jiwon code here
+        request = new Request.Builder()
+                .url(url)
+                .method("GET", null)
+                .build();
+
+        try {
+            response = client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {
 
         // Switch case block to check for specific buttons being pressed
@@ -271,378 +333,325 @@ public class PlayScreen implements ActionListener {
             case "MAIN MENU":
                 play_frame.dispose();
                 gameover_screen.dispose();
+                new_high_score.dispose();
                 new MainMenu();
                 break;
 
             // "RED" Option was clicked
             case "RED":
-//                System.out.println("RED was pressed");
                 player_pattern.add('R');
                 check_input();
                 break;
 
             // "BLUE" Option was clicked
             case "BLUE":
-//                System.out.println("BLUE was pressed");
                 player_pattern.add('B');
                 check_input();
                 break;
 
             // "YELLOW" Option was clicked
             case "YELLOW":
-//                System.out.println("YELLOW was pressed");
                 player_pattern.add('Y');
                 check_input();
                 break;
 
             // "BLUE" Option was clicked
             case "GREEN":
-//                System.out.println("GREEN was pressed");
                 player_pattern.add('G');
                 check_input();
                 break;
 
+            // ALL CASES BELOW ADDS to the game's player_initials (get by using game.get_player_name())
+            // Using both game.getScore() and game.get_player_name() to create a "HIGH SCORE"
+
             case "A":
-//                System.out.println("A");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("A");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    // When player finishes inputting 3 initials
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
 
-//                System.out.println(game.get_player_name());
                 break;
 
             case "B":
-//                System.out.println("B");
-                if(game.get_player_name().length() != 3) {
+                if(game.get_player_name().length() != 3){
                     game.get_player_name().append("B");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if (game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
+
                 }
-//                System.out.println(game.get_player_name());
                 break;
 
             case "C":
-//                System.out.println("C");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("C");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
+
                 break;
             case "D":
-//                System.out.println("D");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("D");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
+
                 break;
             case "E":
-//                System.out.println("E");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("E");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "F":
-//                System.out.println("F");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("F");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "G":
-//                System.out.println("G");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("G");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "H":
-//                System.out.println("H");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("H");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "I":
-//                System.out.println("I");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("I");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "J":
-//                System.out.println("J");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("J");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "K":
-//                System.out.println("K");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("K");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "L":
-//                System.out.println("L");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("L");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "M":
-//                System.out.println("M");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("M");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "N":
-//                System.out.println("N");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("N");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "O":
-//                System.out.println("O");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("O");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "P":
-//                System.out.println("P");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("P");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "Q":
-//                System.out.println("Q");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("Q");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "R":
-//                System.out.println("R");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("R");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "S":
-//                System.out.println("S");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("S");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "T":
-//                System.out.println("T");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("T");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "U":
-//                System.out.println("U");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("U");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "V":
-//                System.out.println("V");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("V");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "W":
-//                System.out.println("W");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("W");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "X":
-//                System.out.println("X");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("X");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "Y":
-//                System.out.println("Y");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("Y");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
+
             case "Z":
-//                System.out.println("Z");
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("Z");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-                    if(game.get_player_name().length() == 3) {
-                        highscore_to_db();
+                    if(game.get_player_name().length() == 3){
                         new_high_score.dispose();
                     }
                 }
-//                System.out.println(game.get_player_name());
                 break;
         }
+
     }
+
 }
