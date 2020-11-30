@@ -1,12 +1,10 @@
 package Simon_Says_v2;
 // Danny Le / Jiwon Kim / Syeda Hafsa Peerzada
 
-// Danny's Methods: match(), check_input(), PlayScreen(), PLAY(), GAMEOVER(), HIGHSCORE()
+// Danny's Methods: match(), check_input(), PlayScreen(), PLAY(), GAMEOVER(), HIGHSCORE(), keyboard_input()
+// highscore_to_db(), keyboard_input(), showTopFive(), check_lowest_score(), check_lowest_score(), score_status() by Jiwon Kim
 // colorChange(), blink(), buttonBlink() contributed by Syeda Hafsa Peerzada
-// highscore_to_db() by Jiwon Kim
 
-
-//okhttp-4.10.0-RC1
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -398,24 +396,20 @@ public class PlayScreen implements ActionListener{
         return new JSONArray();
     }
 
-    public void addData() {
-        // When player finishes inputting 3 initials
-        if(game.get_player_name().length() == 3){
-            new_high_score.dispose();
-            System.out.println(game.get_player_name());
-            highscore_to_db();
-
-            if (showTopFive().length() > 5) {
-                delLowestScore();
-            }
-        }
-    }
-    
     public void keyboard_input(String letter){
         if(game.get_player_name().length() != 3){
             game.get_player_name().append(letter);
             initials.setText("NAME: \"" + game.get_player_name() + "\"");
-            addData();
+
+            // When player finishes inputting 3 initials
+            if(game.get_player_name().length() == 3){
+                new_high_score.dispose();
+                highscore_to_db();
+
+                if (showTopFive().length() > 5) {
+                    delLowestScore();
+                }
+            }
         }
     }
 
