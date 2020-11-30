@@ -6,23 +6,18 @@ import sqlite3
 from flask import Flask, jsonify
 app = Flask(__name__)  # name of the current module
 
-@app.route('/createTable')
-def cT():
-    with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
-        csr = db.cursor()
-        createTable(csr)
-        db.commit()
 
 def createTable(csr):
     # a method to create a table scores to keep track of top 5 high scores
     csr.execute("CREATE TABLE IF NOT EXISTS scores (name TEXT, score INTEGER)")
     db.commit()
 
+#app.route: a Python decorator to assign URLs in the app to fctns easily.
 @app.route('/user/<name>/score/<score>')
 def nHS(name, score):
     # Setting up the connection with simonSays database;
     # path on my laptop; needs to be changed
-    with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
+    with sqlite3.connect("C:\\java\\simonSays.db") as db:
         csr = db.cursor()
         newHighScore(csr, name, score)
         db.commit()
@@ -38,7 +33,7 @@ def newHighScore(csr, name, score):
 
 @app.route('/showTopFive')
 def sTF():
-    with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
+    with sqlite3.connect("C:\\java\\simonSays.db") as db:
         csr = db.cursor()
         db.commit()
         return jsonify(showTopFive(csr))
@@ -54,20 +49,22 @@ def showTopFive(csr):
 
 @app.route('/closeDB')
 def c():
-    with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
-        close()
+    with sqlite3.connect("C:\\java\\simonSays.db") as db:
+        close(csr)
 
-def close():
-    db.commit() # a method to commit to the changes made in the database
-    db.close()  # a method to close SQL connection
+def close(csr):
+    with sqlite3.connect("C:\\java\\simonSays.db") as db:
+        db.commit() # a method to commit to the changes made in the database
+        db.close()  # a method to close SQL connection
 
 @app.route('/delLowestScore')
 def dLS():
-    with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
+    with sqlite3.connect("C:\\java\\simonSays.db") as db:
         csr = db.cursor()
         delLowestScore(csr)
         db.commit()
         return "true"
+
 
 def delLowestScore(csr):
     """
@@ -80,7 +77,7 @@ def delLowestScore(csr):
 
 @app.route('/showLowestScore')
 def sLS():
-    with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
+    with sqlite3.connect("C:\\java\\simonSays.db") as db:
         csr = db.cursor()
         return jsonify(showLowestScore(csr))
 
@@ -91,9 +88,9 @@ def showLowestScore(csr):
     """
     minScore = list(csr.execute("SELECT min(score) FROM scores"))
     return minScore[0]
-   
+    
 
-db = sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db")
+db = sqlite3.connect("C:\\java\\simonSays.db")
 # Obtaining a cursor object from the connection object(db)
 csr = db.cursor()
 createTable(csr)
