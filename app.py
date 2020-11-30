@@ -69,7 +69,6 @@ def dLS():
         db.commit()
         return "true"
 
-
 def delLowestScore(csr):
     """
     a method to delete the row with the lowest score from scores table
@@ -92,28 +91,7 @@ def showLowestScore(csr):
     """
     minScore = list(csr.execute("SELECT min(score) FROM scores"))
     return minScore[0]
-
-@app.route('/find/<name>')
-def fP(name):
-    with sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db") as db:
-        csr = db.cursor()
-        db.commit()
-        return jsonify(findPlayer(csr, name))
-
-def findPlayer(csr, name):
-    """
-    a method to check if playerName has been stored in database
-    :param name: playerName we are trying to find
-    :return: True if the name is already in the database
-            False if the name is not in the database
-    """
-    player = list(csr.execute("SELECT name, score FROM scores WHERE name = ?", (name,)))
-
-    if len(player) == 0:   # If a row with name is NOT found in the db
-        return False
-    else:                   # If a row with name is found
-        return True
-    
+   
 
 db = sqlite3.connect("C:\\sqlite-jdbc\\simonSays.db")
 # Obtaining a cursor object from the connection object(db)
