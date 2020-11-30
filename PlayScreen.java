@@ -1,4 +1,4 @@
-package SimonSays_v2;
+package Simon_Says_v2;
 // Danny Le / Jiwon Kim / Syeda Hafsa Peerzada
 
 // Danny's Methods: match(), check_input(), PlayScreen(), PLAY(), GAMEOVER(), HIGHSCORE()
@@ -10,6 +10,8 @@ package SimonSays_v2;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -17,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class PlayScreen implements ActionListener{
@@ -49,12 +52,12 @@ public class PlayScreen implements ActionListener{
     public static int TIMER_DELAY = 1000;
 
     // High Score Database stuff
-//    private OkHttpClient client;
-//    private Response response;
-//    private Request request;
+    private OkHttpClient client;
+    private Response response;
+    private Request request;
 
     // if High Score was found, TEMPORARY
-    private static boolean high_score_found = true;
+    private static boolean high_score_found = false;
 
     public static void main(String[] args) {
         new PlayScreen();
@@ -65,7 +68,6 @@ public class PlayScreen implements ActionListener{
         // Creates a new instance of the game and creates the PlayScreen UI
         game = new SimonSays.Game();
         player_pattern = new ArrayList<>();
-
         play_frame = new JFrame("Simon Says (Play Screen)");
         score_label= new JLabel("Score: " + game.getScore());
 
@@ -82,6 +84,9 @@ public class PlayScreen implements ActionListener{
         btn_green = new JButton();
         PLAY();
         blink();
+
+        client = new OkHttpClient().newBuilder()
+                .build();
     }
 
     private void colorChange() {
@@ -105,7 +110,6 @@ public class PlayScreen implements ActionListener{
         });
         blinkTimer.start();//initiate the timer
     }
-
     public void blink() {
         int i=1;
 
@@ -137,7 +141,6 @@ public class PlayScreen implements ActionListener{
             }
         }
     }
-
     public void buttonblink(JButton button,int delay){
 
         //the blinking pattern is indicated by the the buttons turning dark.
@@ -154,7 +157,6 @@ public class PlayScreen implements ActionListener{
         timer.setRepeats(false);// so that the pattern only blinks once
         timer.start();//initiates the timer
     }
-
     public Boolean match(ArrayList<Character> player_pattern, ArrayList<Character> main_pattern){
         boolean matches = true;
 
@@ -168,7 +170,6 @@ public class PlayScreen implements ActionListener{
 
         return matches;
     }
-
     public void check_input(){
         // Checks the user's color input. If any input does not match the pattern the game is over.
         // Only adds to the score once the completed player_pattern matches the actual game pattern (game.getPattern())
@@ -176,7 +177,6 @@ public class PlayScreen implements ActionListener{
         if(!match(player_pattern, game.getPattern())){
             game.end_game();
             GAMEOVER();
-
 
         }
         else if ((match(player_pattern, game.getPattern())) && (player_pattern.size() == game.getPattern().size())){
@@ -188,7 +188,6 @@ public class PlayScreen implements ActionListener{
 //            System.out.println("NEW PATTERN: "+ game.getPattern());  // TODO KEEP FOR TESTING
         }
     }
-
     public void PLAY(){
 
         // Starts the game with 1 random color
@@ -249,7 +248,6 @@ public class PlayScreen implements ActionListener{
         play_frame.setVisible(true);
 
     }
-
     public void GAMEOVER(){
         // Disables all the game's buttons so you can't keep playing
         btn_red.setEnabled(false);
@@ -271,13 +269,13 @@ public class PlayScreen implements ActionListener{
         game_over_panel.add(btn_main_menu, BorderLayout.PAGE_END);
         gameover_screen.add(game_over_panel);
         gameover_screen.setVisible(true);
-
+        score_status();
         // This condition can be changed, only true when a new high score is found
         if(high_score_found){
             HIGHSCORE();
-            highscore_to_db();
+//            System.out.println(game.get_player_name());
+//            HIGHSCORE();
         }
-
     }
 
     public void HIGHSCORE(){
@@ -312,28 +310,122 @@ public class PlayScreen implements ActionListener{
         new_high_score.setSize(1000,500);
         new_high_score.add(keyboard_panel);
         new_high_score.setVisible(true);
+
+//        System.out.println(game.get_player_name());
+//        highscore_to_db();
+//        delLowestScore();
+
+//        if (high_score_found) {
+//            HIGHSCORE();
+//            highscore_to_db();
+//        }
     }
 
     public void highscore_to_db() {
         String player_name = game.get_player_name().toString();
         int player_score = game.getScore();
+        System.out.println(player_name);
+        System.out.println(player_score);
         String url = "http://127.0.0.1:5000/user/" + player_name + "/score/" + player_score;
+        System.out.println(url);
 
-        // Jiwon code here
-        request = new Request.Builder()
+        Request request1 = new Request.Builder()
                 .url(url)
                 .method("GET", null)
                 .build();
-
+        try{
+            Response response1 = client.newCall(request1).execute();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    // returns 0 if there's no score in the database
+    // If not, returns the lowest score in the database.
+    public int check_lowest_score() {
+        JSONArray jsonArray;
+        Request request = new Request.Builder()
+                .url("http://127.0.0.1:5000/showLowestScore")
+                .method("GET", null)
+                .build();
         try {
-            response = client.newCall(request).execute();
-        } catch (IOException e) {
+            Response response = client.newCall(request).execute();
+            String jsonString = response.body().string();
+            if (!jsonString.matches((".*\\d.*"))) {
+                return 10000;
+            }
+            else {
+                String s = jsonString.substring(1, jsonString.length() - 2);
+                return Integer.parseInt(s);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (NullPointerException e) {
+            return 0;
+        }
+        return 0;
+    }
+
+    public void score_status() {
+        int player_score = game.getScore();
+        if (player_score > check_lowest_score()) {
+            high_score_found = true;
+        }
+        else if (check_lowest_score() == 10000) {
+            high_score_found = true;
+        }
+    }
+
+    public void delLowestScore() {
+        Request request2 = new Request.Builder()
+                .url("http://127.0.0.1:5000/delLowestScore")
+                .method("GET", null)
+                .build();
+        try{
+            Response response2 = client.newCall(request2).execute();
+//            String jsonString = response.body().string();
+
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public JSONArray showTopFive() {
+        Request request3 = new Request.Builder()
+                .url("http://127.0.0.1:5000/showTopFive")
+                .method("GET", null)
+                .build();
+        try{
+            Response response3 = client.newCall(request3).execute();
+            JSONArray jsonArray = new JSONArray(response3.body().string());
+            return jsonArray;
 
+//            String jsonString = response.body().string();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new JSONArray();
+    }
+
+    public void addData() {
+        // When player finishes inputting 3 initials
+        if(game.get_player_name().length() == 3){
+            new_high_score.dispose();
+            System.out.println(game.get_player_name());
+            highscore_to_db();
+
+            if (showTopFive().length() > 5) {
+                delLowestScore();
+            }
+        }
+    }
+
+
+    public void actionPerformed(ActionEvent e) {
         // Switch case block to check for specific buttons being pressed
         switch (e.getActionCommand()) {
 
@@ -376,23 +468,15 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("A");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    // When player finishes inputting 3 initials
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
-
                 break;
 
             case "B":
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("B");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
 
                 }
                 break;
@@ -401,9 +485,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("C");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
 
                 break;
@@ -411,9 +493,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("D");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
 
                 break;
@@ -421,10 +501,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("E");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -432,10 +509,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("F");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -443,10 +517,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("G");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -454,10 +525,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("H");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -465,10 +533,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("I");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -476,10 +541,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("J");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -487,10 +549,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("K");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -498,10 +557,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("L");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -509,10 +565,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("M");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -520,10 +573,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("N");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -531,10 +581,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("O");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -542,10 +589,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("P");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -553,10 +597,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("Q");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -564,10 +605,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("R");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -575,10 +613,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("S");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -586,10 +621,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("T");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -597,10 +629,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("U");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -608,10 +637,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("V");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -619,10 +645,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("W");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -630,10 +653,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("X");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -641,10 +661,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("Y");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
 
@@ -652,10 +669,7 @@ public class PlayScreen implements ActionListener{
                 if(game.get_player_name().length() != 3){
                     game.get_player_name().append("Z");
                     initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-                    if(game.get_player_name().length() == 3){
-                        new_high_score.dispose();
-                    }
+                    addData();
                 }
                 break;
         }
