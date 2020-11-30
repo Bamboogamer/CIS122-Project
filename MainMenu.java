@@ -101,7 +101,7 @@ public class MainMenu implements ActionListener {
                 // if High Scores is pushed, closes the main menu and opens the High Scores screen
             case "High Scores":
                 menuFrame.dispose();
-                // new HighScores();
+                new HighScores();
 
                 // if Exit is pushed, closes the main menu.
             case "Exit":
