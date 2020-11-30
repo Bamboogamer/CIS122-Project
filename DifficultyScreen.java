@@ -67,20 +67,20 @@ public class DifficultyScreen implements ActionListener {
             //Create a time delay according to the players choice.
             case "Beginner-Easy":
                 diffFrame.dispose();
-                PlayScreen.TIMER_DELAY=500;
+                PlayScreen.TIMER_DELAY=1000;
                 new PlayScreen();
                 break;
 
             case "Expert-Moderate":
                 diffFrame.dispose();
-                PlayScreen.TIMER_DELAY=410;
+                PlayScreen.TIMER_DELAY=800;
                 new PlayScreen();
                 break;
 
 
             case "Pro-Hard":
                 diffFrame.dispose();
-                PlayScreen.TIMER_DELAY=300;
+                PlayScreen.TIMER_DELAY=600;
                 new PlayScreen();
                 break;
 
