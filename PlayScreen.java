@@ -410,6 +410,18 @@ public class PlayScreen implements ActionListener{
             }
         }
     }
+    
+    public void keyboard_input(String letter){
+        if(game.get_player_name().length() != 3){
+            game.get_player_name().append(letter);
+            initials.setText("NAME: \"" + game.get_player_name() + "\"");
+
+            // When player finishes inputting 3 initials
+            if(game.get_player_name().length() == 3){
+                new_high_score.dispose();
+            }
+        }
+    }
 
 
     public void actionPerformed(ActionEvent e) {
@@ -447,217 +459,111 @@ public class PlayScreen implements ActionListener{
                 player_pattern.add('G');
                 check_input();
                 break;
-
+                
             // ALL CASES BELOW ADDS to the game's player_initials (get by using game.get_player_name())
             // Using both game.getScore() and game.get_player_name() to create a "HIGH SCORE"
-
             case "A":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("A");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("A");
                 break;
 
             case "B":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("B");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-
-                }
+                keyboard_input("B");
                 break;
 
             case "C":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("C");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("C");
 
                 break;
             case "D":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("D");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
-
+                keyboard_input("D");
                 break;
+
             case "E":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("E");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("E");
                 break;
 
             case "F":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("F");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("F");
                 break;
 
             case "G":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("G");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("G");
                 break;
 
             case "H":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("H");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("H");
                 break;
 
             case "I":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("I");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("I");
                 break;
 
             case "J":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("J");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("J");
                 break;
 
             case "K":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("K");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("K");
                 break;
 
             case "L":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("L");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("L");
                 break;
 
             case "M":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("M");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("M");
                 break;
 
             case "N":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("N");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("N");
                 break;
 
             case "O":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("O");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("O");
                 break;
 
             case "P":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("P");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("P");
                 break;
 
             case "Q":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("Q");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("Q");
                 break;
 
             case "R":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("R");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("R");
                 break;
 
             case "S":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("S");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("S");
                 break;
 
             case "T":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("T");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("T");
                 break;
 
             case "U":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("U");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("U");
                 break;
 
             case "V":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("V");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("V");
                 break;
 
             case "W":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("W");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("W");
                 break;
 
             case "X":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("X");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("X");
                 break;
 
             case "Y":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("Y");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("Y");
                 break;
 
             case "Z":
-                if(game.get_player_name().length() != 3){
-                    game.get_player_name().append("Z");
-                    initials.setText("NAME: \"" + game.get_player_name() + "\"");
-                    addData();
-                }
+                keyboard_input("Z");
                 break;
         }
     }
