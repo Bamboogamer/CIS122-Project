@@ -273,8 +273,6 @@ public class PlayScreen implements ActionListener{
         // This condition can be changed, only true when a new high score is found
         if(high_score_found){
             HIGHSCORE();
-//            System.out.println(game.get_player_name());
-//            HIGHSCORE();
         }
     }
 
@@ -310,15 +308,6 @@ public class PlayScreen implements ActionListener{
         new_high_score.setSize(1000,500);
         new_high_score.add(keyboard_panel);
         new_high_score.setVisible(true);
-
-//        System.out.println(game.get_player_name());
-//        highscore_to_db();
-//        delLowestScore();
-
-//        if (high_score_found) {
-//            HIGHSCORE();
-//            highscore_to_db();
-//        }
     }
 
     public void highscore_to_db() {
@@ -402,8 +391,6 @@ public class PlayScreen implements ActionListener{
             Response response3 = client.newCall(request3).execute();
             JSONArray jsonArray = new JSONArray(response3.body().string());
             return jsonArray;
-
-//            String jsonString = response.body().string();
         }
         catch (IOException e) {
             e.printStackTrace();
