@@ -1,4 +1,4 @@
-package Simon_Says_v2;
+//okhttp-4.10.0-RC1
 // Danny Le / Jiwon Kim / Syeda Hafsa Peerzada
 
 // Danny's Methods: match(), check_input(), PlayScreen(), PLAY(), GAMEOVER(), HIGHSCORE(), keyboard_input()
@@ -55,9 +55,9 @@ public class PlayScreen implements ActionListener{
     private Request request;
     private static boolean high_score_found = false;
 
-    public static void main(String[] args) {
-        new PlayScreen();
-    }
+//    public static void main(String[] args) {
+//        new PlayScreen();
+//    }
 
 
     public PlayScreen(){
@@ -266,6 +266,10 @@ public class PlayScreen implements ActionListener{
         gameover_screen.add(game_over_panel);
         gameover_screen.setVisible(true);
         score_status();
+
+        if (high_score_found) {
+            HIGHSCORE();
+        }
     }
 
     public void HIGHSCORE(){
@@ -442,7 +446,7 @@ public class PlayScreen implements ActionListener{
                 player_pattern.add('G');
                 check_input();
                 break;
-                
+
             // ALL CASES BELOW ADDS to the game's player_initials (get by using game.get_player_name())
             // Using both game.getScore() and game.get_player_name() to create a "HIGH SCORE"
             case "A":

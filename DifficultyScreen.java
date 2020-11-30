@@ -1,5 +1,3 @@
-package SimonSays_v2;
-
 // Syeda Hafsa Peerzada
 
 import javax.swing.*;
@@ -55,11 +53,11 @@ public class DifficultyScreen implements ActionListener {
         proButton.addActionListener(this);
     }
 
-    public static void main(String[] args) {
-
-        new DifficultyScreen();
-
-    }
+//    public static void main(String[] args) {
+//
+//        new DifficultyScreen();
+//
+//    }
     @Override
     public void actionPerformed(ActionEvent e) {
 

@@ -1,5 +1,3 @@
-package SimonSays_v2;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -97,15 +95,18 @@ public class MainMenu implements ActionListener {
             case "Play":
                 menuFrame.dispose();
                 new DifficultyScreen();
+                break;
 
                 // if High Scores is pushed, closes the main menu and opens the High Scores screen
             case "High Scores":
                 menuFrame.dispose();
                 new HighScores();
+                break;
 
                 // if Exit is pushed, closes the main menu.
             case "Exit":
                 menuFrame.dispose();
+                break;
 
         } // end switch
     }// end actionPerformed method
