@@ -53,8 +53,6 @@ public class PlayScreen implements ActionListener{
     private OkHttpClient client;
     private Response response;
     private Request request;
-
-    // if High Score was found, TEMPORARY
     private static boolean high_score_found = false;
 
     public static void main(String[] args) {
@@ -268,10 +266,6 @@ public class PlayScreen implements ActionListener{
         gameover_screen.add(game_over_panel);
         gameover_screen.setVisible(true);
         score_status();
-        // This condition can be changed, only true when a new high score is found
-        if(high_score_found){
-            HIGHSCORE();
-        }
     }
 
     public void HIGHSCORE(){
