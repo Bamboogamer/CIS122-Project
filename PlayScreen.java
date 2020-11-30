@@ -415,11 +415,7 @@ public class PlayScreen implements ActionListener{
         if(game.get_player_name().length() != 3){
             game.get_player_name().append(letter);
             initials.setText("NAME: \"" + game.get_player_name() + "\"");
-
-            // When player finishes inputting 3 initials
-            if(game.get_player_name().length() == 3){
-                new_high_score.dispose();
-            }
+            addData();
         }
     }
 
