@@ -366,7 +366,6 @@ public class PlayScreen implements ActionListener{
                 .build();
         try{
             Response response2 = client.newCall(request2).execute();
-//            String jsonString = response.body().string();
 
         }
         catch (IOException e) {
