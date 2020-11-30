@@ -123,11 +123,11 @@ public class HighScores implements ActionListener {
 
     public static ArrayList<String> getHighScores() {
         try {
-            // gets the high score data from the database server and returns it as a string
+            // gets the high score data from the flask database server and returns it as a string
 
             HttpClient httpClient = HttpClientBuilder.create().build(); // build the client
 
-            HttpGet httpGet = new HttpGet("http://127.0.0.1:5000/showTopFive"); //  set the server url for the getEntity method
+            HttpGet httpGet = new HttpGet("http://127.0.0.1:5000/showTopFive"); //  set the flask server url for the getEntity method
 
             HttpResponse response = httpClient.execute(httpGet); // get the server response for the getEnity method
 
