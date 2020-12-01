@@ -32,10 +32,6 @@ public class  HighScores implements ActionListener {
     private final JButton menuButton = new JButton("Main Menu");
     private final JButton exitButton = new JButton("Exit");
 
-//	public String getName() {
-//		
-//	}
-
 
 
     public HighScores() {
@@ -72,9 +68,9 @@ public class  HighScores implements ActionListener {
         scoresPanel.setLayout(new GridLayout(6, 2));
         scoresPanel.setAlignmentY(javax.swing.SwingConstants.CENTER);
 
-//        for (int j = 0; j < getHighScores().size(); j++) {
-//            scoresPanel.add(new JLabel(getHighScores().get(j)));
-//        }
+        for (int j = 0; j < getHighScores().size(); j++) {
+            scoresPanel.add(new JLabel(getHighScores().get(j)));
+        }
 
         buttonsPanel.setPreferredSize(new java.awt.Dimension(250, 100));
         buttonsPanel.setMaximumSize(new java.awt.Dimension(250, 100));
@@ -90,7 +86,6 @@ public class  HighScores implements ActionListener {
         scoresFrame.setTitle("Simon Says (Main Menu)");
         scoresFrame.pack();
         scoresFrame.setVisible(true);
-
 
 
         // adds action listeners to the buttons.
