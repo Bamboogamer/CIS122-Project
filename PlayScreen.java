@@ -261,7 +261,7 @@ public class PlayScreen implements ActionListener{
 
         game_over_panel.setLayout(new BorderLayout());
         game_over_label.setText("GAME OVER! Your Score was: " + game.getScore());
-        game_over_label.setFont(new Font(game_over_label.getName(), Font.BOLD, 50));
+        game_over_label.setFont(new Font(game_over_label.getName(), Font.BOLD, 20));
         game_over_panel.add(game_over_label, BorderLayout.CENTER);
         game_over_panel.add(btn_main_menu, BorderLayout.PAGE_END);
         gameover_screen.add(game_over_panel);

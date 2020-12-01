@@ -40,7 +40,7 @@ public class  HighScores implements ActionListener {
         scoresFrame.setPreferredSize(new java.awt.Dimension(650, 800));
 
         // formats menuLabel and sets dimensions
-        scoresLabel.setFont(new java.awt.Font("Copperplate Gothic Bold", 0, 50));
+        scoresLabel.setFont(new java.awt.Font("Copperplate Gothic Bold", 0, 20));
         scoresLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         scoresLabel.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
         scoresLabel.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
