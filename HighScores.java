@@ -1,3 +1,4 @@
+package SimonSays_v3;
 import javax.swing.*;
 
 import org.apache.http.HttpEntity;
@@ -13,7 +14,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 
-public class HighScores implements ActionListener {
+public class  HighScores implements ActionListener {
 
     // creates the menu frame with a title
     private final JFrame scoresFrame = new JFrame("Simon Says (High Scores)");
@@ -25,21 +26,6 @@ public class HighScores implements ActionListener {
 
     // creates the menu label
     private final JLabel scoresLabel = new JLabel("High Scores");
-
-
-
-
-//	private final JLabel name1Label = new JLabel(getHighScores().get(0));
-//	private final JLabel name2Label = new JLabel(getHighScores().get(2));
-//	private final JLabel name3Label = new JLabel(getHighScores().get(4));
-//	private final JLabel name4Label = new JLabel(getHighScores().get(6));
-//	private final JLabel name5Label = new JLabel(getHighScores().get(8));
-//	
-//	private final JLabel score1Label = new JLabel(getHighScores().get(1));
-//	private final JLabel score2Label = new JLabel(getHighScores().get(3));
-//	private final JLabel score3Label = new JLabel(getHighScores().get(5));
-//	private final JLabel score4Label = new JLabel(getHighScores().get(7));
-//	private final JLabel score5Label = new JLabel(getHighScores().get(9));
 
 
     // creates the buttons with the appropriate text
@@ -86,9 +72,9 @@ public class HighScores implements ActionListener {
         scoresPanel.setLayout(new GridLayout(6, 2));
         scoresPanel.setAlignmentY(javax.swing.SwingConstants.CENTER);
 
-        for (int j = 0; j < getHighScores().size(); j++) {
-            scoresPanel.add(new JLabel(getHighScores().get(j)));
-        }
+//        for (int j = 0; j < getHighScores().size(); j++) {
+//            scoresPanel.add(new JLabel(getHighScores().get(j)));
+//        }
 
         buttonsPanel.setPreferredSize(new java.awt.Dimension(250, 100));
         buttonsPanel.setMaximumSize(new java.awt.Dimension(250, 100));

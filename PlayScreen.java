@@ -1,3 +1,4 @@
+package SimonSays_v3;
 //okhttp-4.10.0-RC1
 // Danny Le / Jiwon Kim / Syeda Hafsa Peerzada
 
@@ -284,9 +285,9 @@ public class PlayScreen implements ActionListener{
         high_score_panel.setLayout(new BoxLayout(high_score_panel, BoxLayout.Y_AXIS));
 
         JPanel keyboard_panel = new JPanel();
-        keyboard_panel.setLayout(new GridLayout(2, 13));
+        keyboard_panel.setLayout(new GridLayout(3, 7));
 
-        initials.setFont(new Font(initials.getName(), Font.BOLD, 35));
+        initials.setFont(new Font(initials.getName(), Font.BOLD, 20));
         new_high_score.add(initials, BorderLayout.PAGE_START);
 
         // Adds entirety of Alphabet as buttons in a 2x13 layout
@@ -296,12 +297,20 @@ public class PlayScreen implements ActionListener{
             JButton btn_letter = new JButton(String.valueOf(c));
             btn_letter.setActionCommand(String.valueOf(c));
             btn_letter.addActionListener(this);
-            btn_letter.setPreferredSize(new Dimension(50, 50));
-            btn_letter.setMaximumSize(new Dimension(75, 75));
+            btn_letter.setPreferredSize(new Dimension(25, 25));
+            btn_letter.setMaximumSize(new Dimension(50, 50));
             keyboard_panel.add(btn_letter);
         }
+        
+        JButton done = new JButton("DONE");
+        done.setActionCommand("DONE");
+        done.addActionListener(this);
+        done.setFont(new Font(initials.getName(), Font.PLAIN, 5));
+        done.setPreferredSize(new Dimension(25, 25));
+        done.setMaximumSize(new Dimension(50, 50));
+        keyboard_panel.add(done);
 
-        new_high_score.setSize(1000,500);
+        new_high_score.setSize(480,320);
         new_high_score.add(keyboard_panel);
         new_high_score.setVisible(true);
     }
@@ -394,19 +403,10 @@ public class PlayScreen implements ActionListener{
     }
 
     public void keyboard_input(String letter){
-        if(game.get_player_name().length() != 3){
+        if(game.get_player_name().length() < 3){
             game.get_player_name().append(letter);
             initials.setText("NAME: \"" + game.get_player_name() + "\"");
 
-            // When player finishes inputting 3 initials
-            if(game.get_player_name().length() == 3){
-                new_high_score.dispose();
-                highscore_to_db();
-
-                if (showTopFive().length() > 5) {
-                    delLowestScore();
-                }
-            }
         }
     }
 
@@ -421,6 +421,18 @@ public class PlayScreen implements ActionListener{
                 gameover_screen.dispose();
                 new_high_score.dispose();
                 new MainMenu();
+                break;
+                
+            case "DONE":
+            	// When player finishes inputting 3 initials
+                if(game.get_player_name().length() == 3){
+                    new_high_score.dispose();
+                    highscore_to_db();
+
+                    if (showTopFive().length() > 5) {
+                        delLowestScore();
+                    }
+                }
                 break;
 
             // "RED" Option was clicked
